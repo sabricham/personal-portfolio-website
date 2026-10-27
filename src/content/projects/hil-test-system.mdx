@@ -1,0 +1,56 @@
+---
+title: Hardware-in-the-Loop Test System
+summary: Automated regression testing of an embedded product on real hardware, integrated into the pull-request workflow.
+role: Embedded Software Engineer – Test Automation
+period:
+  start: 2023-01-01
+type: professional
+nda: true
+technologies: [Yocto, Python, C++, pytest, GitHub Actions, Docker]
+tags: [Yocto, HIL, CI, Python]
+featured: true
+services: [hil-test-systems, embedded-ci]
+order: 30
+---
+
+{/* Example content: replace with your own. Keep NDA-sensitive details out. */}
+
+## Context
+
+An embedded product built on a custom Yocto-based Linux distribution needed a reliable way
+to catch regressions before they reached the field. Manual testing on the bench was slow
+and hard to repeat.
+
+## My role
+
+I designed and developed the test system end to end: the test bench architecture, the
+application services that talk to the device under test, and the integration with CI.
+
+## Architecture
+
+```
+ Pull request ──► CI runner ──► Test controller (Linux)
+                                     │
+                     ┌───────────────┼────────────────┐
+                     ▼               ▼                ▼
+               Power control   Serial / SSH     I/O simulation
+                     └───────────────┼────────────────┘
+                                     ▼
+                           Device under test (Yocto image)
+```
+
+## Technical highlights
+
+- Test cases written in Python with pytest, with fixtures that flash and boot the image under test.
+- Dedicated services on the target to expose internal state to the test controller.
+- Results published back on the pull request, so a broken build never reaches `main`.
+
+## Results
+
+- Regression suite runs on every pull request instead of once per release.
+- Bugs found earlier, when they are cheaper to fix.
+
+## Lessons learned
+
+Making the bench deterministic (power cycling, clean flashing, fixed timeouts) mattered more
+than the number of test cases.

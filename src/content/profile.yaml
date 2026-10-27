@@ -1,0 +1,53 @@
+# Profile: the single source for bio, skills, education and links.
+# Used by the home page, /experience, /contact and the printable /cv.
+# TODO: replace the example values with your real data.
+main:
+  name: Sabri Chamtouri
+  headline: Embedded Software Engineer
+  shortBio: >-
+    I build embedded Linux systems and the test infrastructure that keeps them reliable:
+    custom Yocto distributions, hardware-in-the-loop test benches and CI pipelines
+    for products that ship on real hardware.
+  longBio:
+    - >-
+      I work at the boundary between hardware and software. Most of my time goes into
+      Yocto-based Linux distributions, the services that run on them, and the automated
+      test systems that check them against real devices.
+    - >-
+      I care about systems that are easy to reproduce and hard to break: deterministic
+      builds, tests that run on every pull request, and documentation that the next
+      engineer can actually use.
+  location: Italy · Remote
+  availableForFreelance: true
+  # vatNumber: "IT00000000000"
+  focus:
+    - label: Focus
+      value: Embedded Linux / Yocto
+    - label: Testing
+      value: HIL / Test automation / CI
+    - label: Based in
+      value: Italy · Remote
+  skills:
+    - group: Languages
+      items: [C, C++, Python, Bash]
+    - group: Embedded / OS
+      items: [Embedded Linux, Yocto, BitBake, Device Tree, systemd]
+    - group: Testing
+      items: [HIL, pytest, Robot Framework]
+    - group: Tools
+      items: [Git, Docker, GitHub Actions, Jenkins, CMake]
+  education:
+    - degree: M.Sc. Computer Engineering
+      school: University Name
+      start: 2018-09-01
+      end: 2021-07-01
+  certifications: []
+  languages:
+    - name: Italian
+      level: Native
+    - name: English
+      level: Professional (C1)
+  links:
+    email: hello@sabrichamtouri.com
+    github: https://github.com/sabricham
+    linkedin: https://www.linkedin.com/in/your-profile

@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import { getProfile } from '../lib/content';
+
+const profile = await getProfile();
+const channels = [
+  { label: 'Email', value: profile.links.email, href: `mailto:${profile.links.email}` },
+  { label: 'LinkedIn', value: profile.links.linkedin.replace(/^https?:\/\/(www\.)?/, ''), href: profile.links.linkedin },
+  { label: 'GitHub', value: profile.links.github.replace(/^https?:\/\//, ''), href: profile.links.github },
+  ...(profile.links.booking ? [{ label: 'Book a call', value: 'Pick a time', href: profile.links.booking }] : []),
+];
+---
+
+<Base title="Contact" description={`Get in touch with ${profile.name}.`}>
+  <section class="mx-auto max-w-3xl px-4 pt-16 sm:px-6">
+    <SectionLabel>Contact</SectionLabel>
+    <h1 class="mt-3 font-serif text-4xl font-semibold">Let's talk</h1>
+    <p class="mt-4 max-w-xl text-lg leading-relaxed text-fg/85">
+      Recruiters, engineering teams and clients are all welcome. Email is the fastest way to reach me; I usually reply
+      within two working days.
+    </p>
+
+    <ul class="mt-12 divide-y divide-line border-y border-line">
+      {
+        channels.map((c) => (
+          <li>
+            <a
+              href={c.href}
+              class="group flex flex-col gap-1 py-5 sm:flex-row sm:items-center sm:justify-between"
+              rel={c.label === 'Email' ? undefined : 'me'}
+            >
+              <span class="font-mono text-xs text-muted">{c.label}</span>
+              <span class="text-lg break-all group-hover:text-accent">
+                {c.value} <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-8 font-mono text-xs text-muted">Based in {profile.location}.</p>
+  </section>
+</Base>

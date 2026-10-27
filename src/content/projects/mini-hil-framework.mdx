@@ -1,0 +1,38 @@
+---
+title: Mini HIL Framework
+summary: An open-source, low-cost hardware-in-the-loop framework for testing firmware on STM32 and Raspberry Pi.
+role: Author
+period:
+  start: 2024-03-01
+type: open-source
+technologies: [Python, C, STM32, Raspberry Pi, pytest]
+tags: [HIL, Python, C/C++]
+repoUrl: https://github.com/sabricham
+featured: true
+services: [hil-test-systems]
+order: 10
+---
+
+{/* Example content: a personal project you could publish to show HIL skills without NDA limits. */}
+
+## Context
+
+Professional HIL benches are expensive. This project shows the same ideas on hardware that
+costs less than 100 €.
+
+## Architecture
+
+A Raspberry Pi acts as the test controller: it flashes the STM32, drives its inputs through
+GPIO and reads its outputs over UART. Tests are plain pytest files.
+
+```python
+def test_led_blinks_after_boot(dut):
+    dut.reset()
+    assert dut.wait_for_uart("boot ok", timeout=2.0)
+    assert dut.gpio("LED").toggles(within=1.0)
+```
+
+## Results
+
+- Runs in GitHub Actions on a self-hosted runner.
+- Documented so others can build the same bench.

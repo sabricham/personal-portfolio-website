@@ -1,0 +1,38 @@
+---
+title: Custom Yocto Distribution
+summary: A reproducible Linux distribution and BSP for an ARM-based board, with signed images and over-the-air updates.
+role: Embedded Linux Engineer
+period:
+  start: 2021-09-01
+  end: 2022-12-31
+type: professional
+nda: true
+technologies: [Yocto, BitBake, Device Tree, systemd, C]
+tags: [Yocto, Embedded Linux, C/C++]
+featured: true
+services: [yocto-bsp]
+order: 20
+---
+
+{/* Example content: replace with your own. */}
+
+## Context
+
+A product team needed a Linux distribution they could build, audit and update without
+depending on a vendor SDK.
+
+## My role
+
+I set up the Yocto layers, the machine configuration and the image recipes, and documented
+the build so the rest of the team could use it.
+
+## Technical highlights
+
+- Custom meta layer with machine, distro and image configuration.
+- Read-only root filesystem with a separate data partition.
+- A/B partition scheme for safe updates.
+
+## Results
+
+- Fully reproducible builds from a single command.
+- Smaller image and faster boot than the vendor reference.

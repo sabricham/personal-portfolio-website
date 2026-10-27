@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SkillsTable from '../components/SkillsTable.astro';
+import ButtonLink from '../components/ButtonLink.astro';
+import { getProfile, getProjects, getServices } from '../lib/content';
+
+const profile = await getProfile();
+const featured = (await getProjects()).filter((p) => p.data.featured).slice(0, 3);
+const services = await getServices();
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="mx-auto max-w-5xl px-4 pt-16 pb-20 sm:px-6 sm:pt-24">
+    <div class="grid gap-12 md:grid-cols-[1fr_17rem] md:items-end">
+      <div>
+        <SectionLabel>{Astro.site?.hostname}</SectionLabel>
+        <h1 class="mt-5 font-serif text-5xl font-semibold tracking-tight sm:text-6xl">{profile.name}</h1>
+        <p class="mt-3 font-mono text-sm text-accent">{profile.headline}</p>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-fg/85">{profile.shortBio}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/projects/" variant="primary">View projects →</ButtonLink>
+          <ButtonLink href="/contact/">Get in touch</ButtonLink>
+          <ButtonLink href="/cv/">CV</ButtonLink>
+        </div>
+      </div>
+      <dl class="divide-y divide-line border-y border-line text-sm">
+        {
+          profile.focus.map((f) => (
+            <div class="py-3">
+              <dt class="font-mono text-[0.7rem] text-muted">{f.label}</dt>
+              <dd class="mt-1">{f.value}</dd>
+            </div>
+          ))
+        }
+        {
+          profile.availableForFreelance && (
+            <div class="flex items-center gap-2 py-3 font-mono text-xs text-accent">
+              <span class="size-1.5 animate-pulse rounded-full bg-accent" aria-hidden="true" />
+              Available for freelance work
+            </div>
+          )
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- Featured projects -->
+  <section class="mx-auto max-w-5xl px-4 sm:px-6" aria-labelledby="projects-title">
+    <SectionLabel count={featured.length}>Projects</SectionLabel>
+    <div class="mt-3 flex items-end justify-between gap-4">
+      <h2 id="projects-title" class="text-2xl font-semibold">Selected work</h2>
+      <a href="/projects/" class="font-mono text-xs text-muted hover:text-accent">All projects →</a>
+    </div>
+    <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {featured.map((p) => <ProjectCard project={p} />)}
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="mx-auto mt-24 max-w-5xl px-4 sm:px-6" aria-labelledby="about-title">
+    <SectionLabel>About</SectionLabel>
+    <h2 id="about-title" class="mt-3 text-2xl font-semibold">What I do</h2>
+    <div class="mt-8 grid gap-10 md:grid-cols-2">
+      <div class="space-y-4 leading-relaxed text-fg/85">
+        {profile.longBio.map((p) => <p>{p}</p>)}
+        <a href="/experience/" class="inline-block font-mono text-xs text-muted hover:text-accent">Experience →</a>
+      </div>
+      <SkillsTable />
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="mx-auto mt-24 max-w-5xl px-4 sm:px-6" aria-labelledby="services-title">
+    <SectionLabel>Services</SectionLabel>
+    <h2 id="services-title" class="mt-3 text-2xl font-semibold">How I can help</h2>
+    <div class="mt-8 grid gap-5 md:grid-cols-3">
+      {
+        services.map((s, i) => (
+          <a
+            href={`/services/#${s.id}`}
+            class="group rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/60"
+          >
+            <p class="font-mono text-xs text-muted">0{i + 1}</p>
+            <h3 class="mt-3 font-semibold group-hover:text-accent">{s.data.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted">{s.data.summary}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="mx-auto mt-24 max-w-5xl px-4 sm:px-6" aria-labelledby="contact-title">
+    <div class="rounded-2xl border border-line bg-surface p-8 sm:p-12">
+      <SectionLabel>Contact</SectionLabel>
+      <h2 id="contact-title" class="mt-3 max-w-xl font-serif text-3xl font-semibold">
+        Working on an embedded product? Let's talk.
+      </h2>
+      <p class="mt-4 max-w-xl text-muted">
+        Open to full-time roles and freelance projects in embedded Linux, Yocto and test automation.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <ButtonLink href={`mailto:${profile.links.email}`} variant="primary">{profile.links.email}</ButtonLink>
+        <ButtonLink href={profile.links.linkedin}>LinkedIn</ButtonLink>
+      </div>
+    </div>
+  </section>
+</Base>

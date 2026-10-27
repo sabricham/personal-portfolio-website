@@ -1,0 +1,11 @@
+---
+// Small monospace label above a section title, e.g. "PROJECTS · 3".
+interface Props {
+  count?: number;
+}
+const { count } = Astro.props;
+---
+
+<p class="font-mono text-xs tracking-[0.18em] text-accent uppercase">
+  <slot />{count !== undefined && <span class="text-muted"> · {count}</span>}
+</p>

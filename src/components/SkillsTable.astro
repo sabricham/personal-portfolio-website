@@ -1,0 +1,21 @@
+---
+import Chip from './Chip.astro';
+import { getProfile } from '../lib/content';
+
+const { skills } = await getProfile();
+---
+
+<dl class="divide-y divide-line border-y border-line">
+  {
+    skills.map((s) => (
+      <div class="grid gap-2 py-3 sm:grid-cols-[9rem_1fr] sm:items-center">
+        <dt class="font-mono text-xs text-muted">{s.group}</dt>
+        <dd class="flex flex-wrap gap-1.5">
+          {s.items.map((i) => (
+            <Chip>{i}</Chip>
+          ))}
+        </dd>
+      </div>
+    ))
+  }
+</dl>

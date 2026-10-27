@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import { getProfile } from '../lib/content';
+
+const profile = await getProfile();
+// TODO: review this text before launch. It is a starting point, not legal advice.
+const updated = '2026-10-27';
+---
+
+<Base title="Privacy" description="Privacy policy.">
+  <section class="mx-auto max-w-3xl px-4 pt-16 sm:px-6">
+    <SectionLabel>Legal</SectionLabel>
+    <h1 class="mt-3 font-serif text-4xl font-semibold">Privacy policy</h1>
+    <p class="mt-3 font-mono text-xs text-muted">Last updated: {updated}</p>
+
+    <div class="prose mt-10">
+      <h2>Who is responsible</h2>
+      <p>
+        This website is run by {profile.name} ({profile.location}). For any privacy question, write to
+        <a href={`mailto:${profile.links.email}`}>{profile.links.email}</a>.
+      </p>
+
+      <h2>What data is processed</h2>
+      <ul>
+        <li>
+          <strong>Emails you send me.</strong> I use them only to reply and keep them as long as needed for the conversation.
+        </li>
+        <li>
+          <strong>Technical logs.</strong> The hosting provider (Cloudflare) processes IP addresses and request data to deliver
+          the site and protect it from abuse.
+        </li>
+        <li>
+          <strong>Anonymous statistics.</strong> Cloudflare Web Analytics counts visits without cookies and without identifying
+          individual visitors.
+        </li>
+      </ul>
+
+      <h2>Cookies</h2>
+      <p>
+        This site does not use tracking cookies. Your light/dark theme choice is stored only in your browser and is never sent
+        anywhere.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        Under the GDPR you can ask to access, correct or delete your data, and you can complain to your data protection
+        authority (in Italy, the Garante per la protezione dei dati personali).
+      </p>
+    </div>
+  </section>
+</Base>

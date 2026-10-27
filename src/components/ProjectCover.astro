@@ -1,0 +1,59 @@
+---
+// Project cover: the real image if the project has one, otherwise a generated
+// "schematic" placeholder. The view-transition name links the card to the detail page.
+import { Image } from 'astro:assets';
+import type { Project } from '../lib/content';
+
+interface Props {
+  project: Project;
+  large?: boolean;
+}
+const { project, large = false } = Astro.props;
+const { cover, coverAlt, title, tags } = project.data;
+const vtName = `cover-${project.id.replace(/[^a-z0-9-]/gi, '-')}`;
+---
+
+<div
+  class:list={['relative overflow-hidden rounded-lg border border-line bg-surface-2', large ? 'aspect-[21/9]' : 'aspect-[16/9]']}
+  style={`view-transition-name: ${vtName}`}
+>
+  {
+    cover ? (
+      <Image
+        src={cover}
+        alt={coverAlt ?? ''}
+        widths={[480, 960, 1440]}
+        sizes={large ? '(min-width: 1024px) 1024px, 100vw' : '(min-width: 768px) 480px, 100vw'}
+        class="size-full object-cover"
+        loading={large ? 'eager' : 'lazy'}
+      />
+    ) : (
+      <div class="cover-grid absolute inset-0 flex flex-col justify-between p-4" aria-hidden="true">
+        <div class="flex items-center gap-1.5">
+          <span class="size-1.5 rounded-full bg-accent" />
+          <span class="size-1.5 rounded-full bg-muted/40" />
+          <span class="size-1.5 rounded-full bg-muted/40" />
+        </div>
+        <div class="font-mono">
+          <p class:list={['text-muted', large ? 'text-sm' : 'text-[0.7rem]']}>$ ./{project.id}</p>
+          <p class:list={['mt-1 text-fg/80', large ? 'text-lg' : 'text-xs']}>{tags.join(' · ')}</p>
+        </div>
+      </div>
+    )
+  }
+  <span class="sr-only">{!cover && title}</span>
+</div>
+
+<style>
+  .cover-grid {
+    background-image:
+      radial-gradient(circle at 85% 20%, var(--accent-soft), transparent 55%),
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      22px 22px,
+      22px 22px;
+    background-position: center;
+  }
+</style>

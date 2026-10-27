@@ -1,0 +1,51 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { getProfile } from '../lib/content';
+
+const profile = await getProfile();
+const nav = [
+  { href: '/projects/', label: 'Projects' },
+  { href: '/experience/', label: 'Experience' },
+  { href: '/services/', label: 'Services' },
+  { href: '/contact/', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+const handle = profile.name.toLowerCase().replace(/\s+/g, '');
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur">
+  <!-- On phones the menu wraps to its own row below the name. -->
+  <div class="mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 px-4 sm:h-14 sm:flex-nowrap sm:px-6">
+    <a href="/" class="flex h-14 shrink-0 items-center gap-2 font-mono text-sm font-medium text-fg">
+      <span class="size-2 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" aria-hidden="true"></span>
+      <span>{handle}</span>
+    </a>
+    <nav
+      aria-label="Main"
+      class="order-last -mx-2.5 w-[calc(100%+1.25rem)] overflow-x-auto overflow-y-hidden pb-2 [scrollbar-width:none] sm:order-none sm:mx-0 sm:ml-auto sm:w-auto sm:pb-0"
+    >
+      <ul class="flex items-center gap-1 text-sm whitespace-nowrap">
+        {
+          nav.map((item) => {
+            const active = path.startsWith(item.href);
+            return (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'rounded-md px-2.5 py-1.5 transition-colors hover:text-fg',
+                    active ? 'text-accent' : 'text-muted',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+    <div class="ml-auto sm:ml-0"><ThemeToggle /></div>
+  </div>
+</header>

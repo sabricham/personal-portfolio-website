@@ -1,0 +1,192 @@
+---
+// Printable CV on an A4 sheet, built from the same data as the rest of the site.
+// Always light, whatever theme the visitor picked. Later, Playwright can turn this page into /cv.pdf.
+import Base from '../layouts/Base.astro';
+import { formatRange, formatYears, getExperience, getProfile, getProjects } from '../lib/content';
+
+const profile = await getProfile();
+const jobs = await getExperience();
+const projects = (await getProjects()).filter((p) => p.data.featured);
+const site = Astro.site?.hostname;
+---
+
+<Base title="CV" bare>
+  <div class="cv-screen">
+    <nav class="cv-toolbar">
+      <a href="/experience/">← Back to site</a>
+      <button type="button" data-print>Print / Save as PDF</button>
+    </nav>
+
+    <article class="cv-sheet">
+      <header class="flex items-end justify-between gap-6 border-b-2 border-[#b2620b] pb-4">
+        <div>
+          <h1 class="font-serif text-[26pt] leading-none font-semibold">{profile.name}</h1>
+          <p class="mt-2 font-mono text-[9.5pt] text-[#b2620b]">{profile.headline}</p>
+        </div>
+        <ul class="text-right text-[8.5pt] leading-snug text-[#555]">
+          <li>{profile.links.email}</li>
+          <li>{profile.links.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</li>
+          <li>{profile.links.github.replace(/^https?:\/\//, '')}</li>
+          <li>{site} · {profile.location}</li>
+        </ul>
+      </header>
+
+      <p class="mt-4 text-[9.5pt] leading-relaxed">{profile.shortBio}</p>
+
+      <h2 class="cv-h2">Experience</h2>
+      {
+        jobs.map((job) => (
+          <section class="cv-block">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-[10.5pt] font-semibold">
+                {job.data.position} <span class="font-normal text-[#555]">· {job.data.company}</span>
+              </h3>
+              <p class="shrink-0 font-mono text-[8pt] text-[#555]">{formatRange(job.data.start, job.data.end)}</p>
+            </div>
+            <ul class="mt-1 list-disc pl-4 text-[9pt] leading-snug marker:text-[#b2620b]">
+              {job.data.highlights.map((h) => (
+                <li>{h}</li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+
+      <h2 class="cv-h2">Selected projects</h2>
+      {
+        projects.map((p) => (
+          <section class="cv-block">
+            <div class="flex items-baseline justify-between gap-4">
+              <h3 class="text-[10pt] font-semibold">{p.data.title}</h3>
+              <p class="shrink-0 font-mono text-[8pt] text-[#555]">{formatYears(p.data.period.start, p.data.period.end)}</p>
+            </div>
+            <p class="mt-0.5 text-[9pt] leading-snug">{p.data.summary}</p>
+            <p class="mt-0.5 font-mono text-[7.5pt] text-[#555]">{p.data.technologies.join(' · ')}</p>
+          </section>
+        ))
+      }
+
+      <h2 class="cv-h2">Skills</h2>
+      <dl class="grid grid-cols-[7.5rem_1fr] gap-y-1 text-[9pt]">
+        {
+          profile.skills.map((s) => (
+            <>
+              <dt class="font-mono text-[8pt] text-[#555]">{s.group}</dt>
+              <dd>{s.items.join(', ')}</dd>
+            </>
+          ))
+        }
+      </dl>
+
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <h2 class="cv-h2">Education</h2>
+          {
+            profile.education.map((e) => (
+              <p class="text-[9pt] leading-snug">
+                <span class="font-semibold">{e.degree}</span>
+                <br />
+                {e.school} · <span class="font-mono text-[8pt] text-[#555]">{formatYears(e.start, e.end)}</span>
+              </p>
+            ))
+          }
+        </div>
+        <div>
+          <h2 class="cv-h2">Languages</h2>
+          {
+            profile.languages.map((l) => (
+              <p class="text-[9pt] leading-snug">
+                {l.name} <span class="text-[#555]">· {l.level}</span>
+              </p>
+            ))
+          }
+        </div>
+      </div>
+    </article>
+  </div>
+</Base>
+
+<style is:global>
+  .cv-screen {
+    min-height: 100dvh;
+    background: #e9e7e2;
+    color: #1c1a17;
+    color-scheme: light;
+    padding: 1rem 1rem 3rem;
+  }
+  .cv-toolbar {
+    max-width: 210mm;
+    margin: 0 auto 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .cv-toolbar a:hover {
+    color: #b2620b;
+  }
+  .cv-toolbar button {
+    background: #1c1a17;
+    color: #fff;
+    border-radius: 9999px;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+  }
+  .cv-sheet {
+    background: #fff;
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 16mm 16mm;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+  }
+  .cv-h2 {
+    margin: 14pt 0 5pt;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #b2620b;
+  }
+  .cv-block + .cv-block {
+    margin-top: 7pt;
+  }
+  .cv-block {
+    break-inside: avoid;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  @media print {
+    html,
+    body {
+      background: #fff !important;
+    }
+    .cv-screen {
+      padding: 0;
+      background: #fff;
+    }
+    .cv-toolbar {
+      display: none;
+    }
+    .cv-sheet {
+      box-shadow: none;
+      max-width: none;
+      min-height: auto;
+    }
+  }
+  @media (max-width: 640px) {
+    .cv-sheet {
+      padding: 8mm;
+    }
+  }
+</style>
+
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>
